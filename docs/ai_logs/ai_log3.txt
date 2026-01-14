@@ -138,196 +138,94 @@ Chúc các em có một kỳ học "vất vả" nhưng thu lượm được nhi�
 
 help me generate a list of feature suitable for the shoppe assignment 
 
-Dưới đây là danh sách feature đầy đủ – đúng tinh thần LAB211 cho đề tài
-👉 E-Commerce Simulation (mô hình Shopee/Lazada)
-Danh sách này đủ sâu để đạt 8–10 điểm, dễ chia việc cho nhóm 3–4 người, và rất phù hợp để demo + vấn đáp.
+giúp tôi phân tích, vẽ erd, flowchart và class diagram với mô hình shoppe
 
-1. CORE ENTITIES (bắt buộc phải có)
+Dưới đây là bộ phân tích đầy đủ cho đề tài E-Commerce Simulation (mô hình Shopee/Lazada), bám sát LAB211 – Java Web + Tomcat, đủ để vẽ ERD, Flowchart, Class Diagram và bảo vệ vấn đáp.
 
-(Dùng để kiểm tra tiêu chí Entity + Volume + Conflict Logic)
+I. DANH SÁCH CHỨC NĂNG (FEATURE LIST) – SHOPEE SIMULATION
+1. User & Authentication
 
-User
+Đăng ký / Đăng nhập
 
-Customer
-
-Shop Owner
-
-Admin
-
-Shop
-
-Product
-
-ProductVariant (size, màu, giá, tồn kho riêng)
-
-Order
-
-OrderItem
-
-Voucher
-
-InventoryTransaction (ghi log nhập/xuất kho)
-
-2. DATA MIGRATION (ETL – BẮT BUỘC ĂN ĐIỂM)
-2.1 Import CSV → Database
-
-Import:
-
-Users (>10.000 dòng)
-
-Products + Variants
-
-Shops
-
-Xử lý dữ liệu rác:
-
-Email sai format
-
-Phone thiếu số
-
-Giá âm
-
-Variant trùng SKU
-
-Mapping dữ liệu:
-
-CSV Product → Product + ProductVariant
-
-Log lỗi import:
-
-Dòng lỗi → file import_error.log
-
-📌 Demo vấn đáp:
-
-“CSV cũ rất bẩn, nhóm em đã normalize và split thành nhiều bảng như thế nào?”
-
-3. USER & AUTHENTICATION
-3.1 Authentication
-
-Register / Login
-
-Session-based Authentication (HttpSession)
-
-Role-based access:
-
-Admin
-
-Shop Owner
+Phân quyền:
 
 Customer
 
-3.2 User Management
+Seller (Shop Owner)
 
-View / Update profile
+Admin
 
-Xem lịch sử đơn hàng
+Quản lý hồ sơ người dùng
 
-Tích điểm Loyalty Point
+Trạng thái tài khoản (Active / Banned)
 
-4. SHOP MANAGEMENT (SHOP OWNER)
-4.1 Shop CRUD
+2. Shop Management (Seller)
 
-Tạo / sửa / ẩn Shop
+Tạo & quản lý Shop
 
-Upload logo shop
+Bật / tắt Shop
 
-4.2 Product Management
+Xem thống kê đơn hàng theo Shop
+
+Quản lý danh sách sản phẩm
+
+3. Product & Variant (Core Entity)
 
 CRUD Product
 
-CRUD Product Variant:
+Mỗi Product có nhiều Variant
 
 Size
 
 Color
 
-Price
+Giá riêng
 
-Stock
+Tồn kho riêng
 
-Enable / Disable product
+Upload hình ảnh (có thể mock bằng URL)
 
-4.3 Inventory Tracking
+Trạng thái sản phẩm (Active / Out of Stock)
 
-Tự động trừ kho khi đặt hàng
+4. Search & Browse
 
-Ghi log:
+Tìm kiếm sản phẩm theo:
 
-IN (nhập)
+Tên
 
-OUT (bán)
-
-📌 Conflict Logic:
-
-Nhiều user mua cùng lúc → không được âm kho
-
-5. CUSTOMER FEATURES (GIỐNG SHOPEE)
-5.1 Browse & Search
-
-Trang chủ:
-
-Flash Sale
-
-Sản phẩm mới
-
-Search:
-
-Theo tên
-
-Theo shop
-
-Theo giá
-
-Filter:
-
-Price range
-
-Size / Color
-
-5.2 Product Detail
-
-Chọn Variant
-
-Xem tồn kho realtime
-
-Giá sau khuyến mãi
-
-6. CART & ORDER (TRỌNG TÂM LOGIC)
-6.1 Cart (Session Management)
-
-Add / Update / Remove item
-
-Cart lưu bằng Session
-
-Kiểm tra stock trước khi checkout
-
-6.2 Voucher System (Logic khó – ăn điểm)
-
-Voucher theo:
+Khoảng giá
 
 Shop
 
-Toàn sàn
+Phân trang (Pagination)
 
-Điều kiện:
+Xem chi tiết sản phẩm
 
-Min order amount
+5. Cart & Session Management
 
-Expired date
+Thêm sản phẩm (variant) vào giỏ hàng
 
-Không cho dùng trùng
+Cập nhật số lượng
 
-Voucher chỉ dùng 1 lần / user
+Xóa sản phẩm khỏi giỏ
 
-6.3 Order Processing
+Lưu Cart bằng HTTP Session
 
-Checkout:
+6. Order & Checkout (Complex Logic ⭐)
 
-Transaction DB
+Tạo đơn hàng từ Cart
 
-Lock inventory
+Áp dụng Voucher
 
-Order status:
+Tính tổng tiền
+
+Transaction:
+
+Trừ tồn kho
+
+Không cho âm kho
+
+Trạng thái Order:
 
 PENDING
 
@@ -335,118 +233,279 @@ PAID
 
 CANCELLED
 
-Rollback nếu lỗi
+COMPLETED
 
-📌 Demo vấn đáp:
+7. Voucher & Promotion
 
-“Nếu 2 người cùng mua 1 sản phẩm còn 1 cái thì chuyện gì xảy ra?”
+Tạo Voucher:
 
-7. FLASH SALE SIMULATION (PHẦN ĂN ĐIỂM CAO)
-7.1 Flash Sale Feature
+Giảm %
 
-Set thời gian Flash Sale
+Giảm tiền cố định
 
-Giảm giá theo Variant
+Điều kiện:
 
-Giới hạn số lượng bán
+Đơn tối thiểu
 
-7.2 Simulator (Project B – BẮT BUỘC)
+Thời gian hiệu lực
 
-Java Console App
+Số lượt sử dụng
 
-Sinh:
+Kiểm tra Voucher hợp lệ khi Checkout
 
-User giả
+8. Flash Sale Simulation (Simulator ⭐⭐)
 
-Order giả
+Tool Java Console bắn:
 
-Bắn:
+1.000–10.000 request /checkout
 
-1.000 – 10.000 request POST /api/order
+Kiểm tra:
 
-Config:
+Race condition
 
-Thread count
+Transaction rollback
 
-Delay
+Ghi log Tomcat
 
-Log:
+9. Reporting & Dashboard
 
-Success
-
-Out of stock
-
-Error
-
-📌 Demo bắt buộc:
-
-Tomcat log chạy liên tục
-
-Stock không bị âm
-
-8. ADMIN DASHBOARD (VISUALIZATION)
-8.1 Statistics
-
-Tổng đơn hàng theo ngày
-
-Doanh thu theo shop
+Doanh thu theo ngày
 
 Top sản phẩm bán chạy
 
-Failed orders (do hết kho)
+Số lượng đơn hàng
 
-8.2 Chart
+Biểu đồ (Chart.js)
 
-Line chart: Orders / day
+II. PHÂN TÍCH THỰC THỂ (ENTITY ANALYSIS)
+Các Entity chính
+Entity	Vai trò
+User	Người dùng
+Shop	Cửa hàng
+Product	Sản phẩm
+ProductVariant	Biến thể
+Cart	Giỏ hàng
+Order	Đơn hàng
+OrderItem	Chi tiết đơn
+Voucher	Khuyến mãi
+III. ERD – ENTITY RELATIONSHIP DIAGRAM (MÔ TẢ)
+USER
 
-Bar chart: Revenue / shop
+user_id (PK)
 
-Pie chart: Order status
+username
 
-9. NON-FUNCTIONAL (GIẢNG VIÊN RẤT THÍCH)
-9.1 Performance & Safety
+password
 
-JDBC Transaction
+role
 
-synchronized / DB locking
+status
 
-Connection Pool (bonus)
+SHOP
 
-9.2 Logging
+shop_id (PK)
 
-Access log
+shop_name
 
-Order log
+owner_id (FK → User)
 
-Error log
+status
 
-10. FEATURE → ĐIỂM RUBRIC MAP
-Feature	Rubric
-CSV Import + Cleaning	Data Migration (2.0đ)
-MVC + Tomcat	Core Architecture (2.0đ)
-Cart + Voucher + Stock Lock	Complex Logic (3.0đ)
-Simulator Flash Sale	Simulator (3.0đ)
-Dashboard Charts	UI & Reporting (1.5đ)
-AI Logs + Git	Process (1.5đ)
-11. GỢI Ý CHIA VIỆC (NHÓM 4 NGƯỜI)
+PRODUCT
 
-Member 1: Database + CSV Import
+product_id (PK)
 
-Member 2: Product / Shop / Inventory
+shop_id (FK)
 
-Member 3: Cart / Order / Voucher Logic
+name
 
-Member 4: Simulator + Dashboard
+description
 
-Nếu bạn muốn, mình có thể:
+status
 
-📌 Vẽ ERD chuẩn cho Shopee Simulation
+PRODUCT_VARIANT
 
-📌 Viết API list (Servlet endpoints)
+variant_id (PK)
 
-📌 Viết Simulator Java mẫu
+product_id (FK)
 
-📌 Chuẩn bị script CSV 10.000 user/product
+size
 
-Chỉ cần nói tiếp 👉 “next: …”
+color
 
+price
+
+stock_quantity
+
+CART
+
+cart_id (PK)
+
+user_id (FK)
+
+CART_ITEM
+
+cart_item_id (PK)
+
+cart_id (FK)
+
+variant_id (FK)
+
+quantity
+
+ORDER
+
+order_id (PK)
+
+user_id (FK)
+
+total_amount
+
+status
+
+created_at
+
+ORDER_ITEM
+
+order_item_id (PK)
+
+order_id (FK)
+
+variant_id (FK)
+
+price
+
+quantity
+
+VOUCHER
+
+voucher_id (PK)
+
+code
+
+discount_type
+
+discount_value
+
+min_order
+
+quantity
+
+expired_date
+
+ORDER – VOUCHER
+
+order.voucher_id (FK, nullable)
+
+👉 Quan hệ quan trọng
+
+User 1—N Order
+
+Shop 1—N Product
+
+Product 1—N Variant
+
+Order 1—N OrderItem
+
+IV. FLOWCHART – CÁC CHỨC NĂNG CHÍNH
+1. Flow: Add to Cart
+User clicks Add to Cart
+        ↓
+Check Session Cart exists?
+        ↓
+No → Create Cart
+        ↓
+Check Variant stock
+        ↓
+Enough?
+  ↓ Yes          ↓ No
+Add to cart     Show error
+
+2. Flow: Checkout (RẤT QUAN TRỌNG)
+User clicks Checkout
+        ↓
+Validate Cart
+        ↓
+Apply Voucher?
+        ↓
+Calculate Total
+        ↓
+BEGIN TRANSACTION
+        ↓
+Check stock for each variant
+        ↓
+Enough?
+   ↓ Yes           ↓ No
+Update stock      ROLLBACK
+Create order
+COMMIT
+
+3. Flow: Flash Sale Simulator
+Simulator Start
+        ↓
+Generate random users
+        ↓
+Send POST /checkout
+        ↓
+Repeat 1000 times
+        ↓
+Collect success/fail
+
+V. CLASS DIAGRAM (MVC – JAVA WEB)
+Model Layer
+User
+Shop
+Product
+ProductVariant
+Order
+OrderItem
+Voucher
+
+DAO Layer
+UserDAO
+ShopDAO
+ProductDAO
+VariantDAO
+OrderDAO
+VoucherDAO
+
+Service Layer (BUSINESS LOGIC ⭐)
+AuthService
+CartService
+OrderService
+VoucherService
+InventoryService
+
+Controller (Servlet)
+LoginServlet
+ProductServlet
+CartServlet
+CheckoutServlet
+VoucherServlet
+
+Simulator Project
+FlashSaleSimulator
+HttpClientUtil
+RandomDataGenerator
+
+VI. GỢI Ý PHÂN CÔNG NHÓM (3–4 NGƯỜI)
+Thành viên	Phụ trách
+A	ERD + DB + Migration CSV
+B	Product, Cart, Order
+C	Voucher + Transaction
+D	Simulator + Dashboard
+VII. NẾU BẠN MUỐN TIẾP
+
+Mình có thể:
+
+✅ Vẽ ERD dạng ASCII / Draw.io
+
+✅ Viết SQL CREATE TABLE
+
+✅ Viết Flowchart dạng pseudo-code
+
+✅ Viết Class Diagram UML
+
+✅ Viết Checklist vấn đáp LAB211
+
+👉 Bạn muốn tiếp theo phần nào?
