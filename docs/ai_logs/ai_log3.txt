@@ -1,0 +1,452 @@
+HƯỚNG DẪN ĐỒ ÁN MÔN HỌC LAB211: HỆ THỐNG WEB GIẢ LẬP DOANH NGHIỆP
+Thời lượng: 10 Tuần
+Công nghệ bắt buộc:
+Ngôn ngữ: Java Web (Servlet/JSP).
+Server: Apache Tomcat (Bắt buộc vì liên quan đến tên môn học).
+Database: Tùy chọn (MySQL, SQL Server, PostgreSQL...) nhưng phải cài đặt Local (không dùng Cloud DB để đảm bảo vấn đáp offline).
+Giao diện: Web (HTML/CSS/JS) hoặc App Mobile (Android kết nối Java Backend).
+1. MỤC TIÊU MÔN HỌC (COURSE OBJECTIVES)
+Đồ án yêu cầu sinh viên xây dựng một Hệ thống Web Giả lập (Web-based Simulation System) với quy mô dữ liệu lớn, vận hành trên nền tảng Java Web & Tomcat. Sinh viên sẽ đóng vai trò là kỹ sư phần mềm thực hiện quy trình Chuyển đổi số (Digital Transformation):
+Migrate (ETL): Đọc dữ liệu từ hệ thống cũ (File CSV lộn xộn) và Import sạch sẽ vào Cơ sở dữ liệu (Database).
+Operate: Xây dựng ứng dụng Web để quản lý nghiệp vụ, xử lý logic phức tạp.
+Simulate: Viết tool giả lập (Client) để gửi hàng nghìn HTTP Request tự động vào Server Tomcat (Stress Test).
+Visualize: Hiển thị Dashboard báo cáo trực quan trên trình duyệt.
+2. DANH SÁCH ĐỀ TÀI (PROJECT TOPICS)
+Sinh viên làm việc theo nhóm (3-4 thành viên). Chọn 1 trong các đề tài sau hoặc tự đề xuất.
+2.1. E-Commerce Simulation (Mô hình Shopee/Lazada)
+Thực thể: User, Shop, Product (với nhiều biến thể Size/Màu), Order, Voucher.
+Thách thức Web: Giao diện sàn thương mại điện tử, giỏ hàng (Session management), tính toán khuyến mãi chồng chéo.
+Simulator: Giả lập "Flash Sale" - Tool bắn hàng nghìn request đặt hàng cùng lúc vào Tomcat, Server phải xử lý Transaction để không bị âm kho.
+2.2. Food Delivery Network (Mô hình GrabFood/ShopeeFood)
+Thực thể: Customer, Restaurant (Menu động), Driver, Order, Location.
+Thách thức Web: Giao diện đặt món, quản lý menu quán ăn, tìm kiếm quán gần nhất.
+Simulator: Giả lập định vị - Tool gửi tọa độ GPS của tài xế liên tục về Server để cập nhật vị trí trên bản đồ ảo.
+2.3. Pharmacy Chain Management (Mô hình Long Châu/Pharmacity)
+Thực thể: Thuốc, Lô hàng (Batch - Hạn sử dụng), Khách hàng, Dược sĩ, Hóa đơn.
+Thách thức Web: Quản lý kho thuốc theo Lô (FIFO), cảnh báo thuốc hết hạn trên Dashboard, bán hàng tại quầy (POS Interface).
+Simulator: Tool giả lập các máy POS tại cửa hàng gửi dữ liệu đơn hàng về Server trung tâm liên tục.
+2.4. Đề tài tự chọn (Custom Topic)
+Nhóm được phép tự chọn đề tài nếu thỏa mãn đủ 5 Tiêu chí Sàn:
+Entity: Tối thiểu 4 thực thể chính có quan hệ chéo trong Database.
+Volume: Dữ liệu có tính lịch sử/tích lũy theo thời gian (Time-series).
+Conflict Logic: Có nghiệp vụ xử lý xung đột (VD: Trùng lịch, Hết hạn ngạch).
+Simulation: Có khả năng viết Tool gửi Request tự động.
+Migration: Có kịch bản import dữ liệu từ file Excel/CSV cũ vào DB.
+3. KIẾN TRÚC KỸ THUẬT (TECHNICAL ARCHITECTURE)
+Hệ thống hoạt động theo mô hình Client-Server:
+Project A: Web Server (Tomcat)
+Là ứng dụng Java Web (Servlet/JSP) chạy trên Tomcat.
+Kết nối trực tiếp với Database Local.
+Cung cấp giao diện người dùng (UI) trên trình duyệt.
+Cung cấp API (Servlet endpoint) để nhận dữ liệu từ Simulator.
+Project B: The Simulator (Client Tool)
+Là ứng dụng Java Console hoặc Desktop App riêng biệt.
+Chức năng: Tự động sinh dữ liệu ngẫu nhiên và dùng thư viện HTTP (như HttpURLConnection hoặc HttpClient) để Gửi Request (POST/GET) vào Project A.
+Mục tiêu: Kiểm tra khả năng chịu tải của Server Tomcat và Database.
+4. LỘ TRÌNH 10 TUẦN (TIMELINE)
+Tuần
+Giai đoạn
+Nhiệm vụ chi tiết
+Output (Bàn giao)
+1
+Setup
+Chọn đề tài. Cài đặt Tomcat, Database Local. Tạo bộ dữ liệu mẫu (Legacy CSV > 10.000 dòng).
+Môi trường Dev sẵn sàng. Repo GitHub.
+2
+Analysis
+Phân tích hệ thống. Vẽ ERD (Database). Vẽ Flowchart (Lược đồ thuật toán) cho các chức năng chính.
+File thiết kế DB, Flowchart.
+3-4
+Migration
+Thiết kế Database. Viết module Import CSV to DB. Xử lý dữ liệu rác, đảm bảo toàn vẹn dữ liệu khi Insert.
+Database có sẵn 10.000 records sạch.
+5
+Web Core
+Xây dựng khung Web App trên Tomcat. Kết nối DB. Làm giao diện Login/Register/CRUD cơ bản.
+Web App chạy được trên Localhost.
+6-7
+Logic
+Code các nghiệp vụ khó nhất (Tính tiền, Xử lý kho, Transaction). Xây dựng Project B (Simulator) để call API.
+Hoàn thành Business Logic.
+8
+Stress Test
+Chạy Project B bắn request liên tục vào Tomcat. Xử lý đồng bộ (Synchronization) trên Server để tránh lỗi dữ liệu.
+Video quay màn hình Server chịu tải.
+9
+UI/UX
+Hoàn thiện giao diện Web/App đẹp mắt. Vẽ biểu đồ báo cáo (Chart) trên Web.
+Web App hoàn chỉnh giao diện.
+10
+Defense
+Bảo vệ đồ án. Demo trực tiếp: Import -> Simulate (Tomcat Log nhảy liên tục) -> báo cáo trên Web.
+Sản phẩm đóng gói (.war).
+
+5. QUY ĐỊNH VỀ AI & GITHUB (AI & ACADEMIC INTEGRITY)
+Giảng viên khuyến khích sử dụng AI (ChatGPT, Gemini, Copilot...) như một trợ lý (Co-pilot), nhưng nghiêm cấm việc nhờ AI làm thay mà không hiểu (Auto-pilot).
+5.1. Cấu trúc Repository (Bắt buộc)
+Mỗi nhóm phải tổ chức GitHub Repo theo chuẩn sau:
+/Student_Project
+├── /data (chứa file csv cũ và file data mới)
+├── /src
+│   ├── /core_app (Project A)
+│   └── /simulator (Project B)
+├── /docs
+│   ├── /analysis (Sơ đồ thiết kế)
+│   └── /ai_logs (NHẬT KÝ AI - QUAN TRỌNG)
+└── README.md
+
+
+
+5.2. Nhật ký AI (AI Logs)
+Trong thư mục /docs/ai_logs, sinh viên phải lưu lại quá trình làm việc với AI dưới dạng file Markdown. Nếu code giống AI mà không có Log -> 0 Điểm.
+Mẫu Log:
+Vấn đề: Không biết cách xử lý dấu phẩy trong file CSV.
+Prompt: "Java code to parse CSV line with quotes handling..."
+Code AI: (Paste đoạn code AI gợi ý)
+Sự chỉnh sửa của sinh viên: "Code AI dùng thư viện ngoài, nhóm đã sửa lại logic đó dùng BufferedReader của Java Core để tuân thủ quy định môn học."
+5.3. Tracking & Commit
+Commit code thường xuyên. Không chấp nhận repo chỉ có 1-2 commit lớn vào cuối kỳ.
+Giảng viên sẽ dùng tool để quét lịch sử commit và văn phong code.
+6. TIÊU CHÍ ĐÁNH GIÁ (GRADING RUBRIC)
+Tổng điểm: 10.0
+Hạng mục
+Trọng số
+Tiêu chí chi tiết
+1. Data Migration
+2.0đ
+Xử lý tốt dữ liệu rác, import thành công >10.000 records vào Database.
+2. Core Architecture
+2.0đ
+Cấu hình Tomcat đúng, áp dụng MVC, Code Java Web chuẩn, tách lớp Service/Model rõ ràng.
+3. Complex Logic & Simulator
+3.0đ
+Hệ thống chịu tải được khi Simulator chạy, xử lý đúng nghiệp vụ khó, API hoạt động tốt.
+4. Reporting & UI
+1.5đ
+Giao diện Web thân thiện, Dashboard báo cáo đẹp, chính xác.
+5. Process & AI Transparency
+1.5đ
+Git log đầy đủ, AI logs minh bạch, trả lời vấn đáp (Code Defense) tốt.
+
+Quy định về điểm số:
+ĐIỂM ĐẠT (PASS): Sinh viên đạt Tổng điểm ≥ 5.0.
+ĐIỂM LIỆT (FAIL): Sinh viên đạt < 5.0 HOẶC vi phạm các lỗi sau (0 điểm):
+Không chạy được demo (Tomcat/Database lỗi).
+Thiếu Nhật ký AI (AI Logs).
+Gian lận trong quá trình làm bài.
+Chúc các em có một kỳ học "vất vả" nhưng thu lượm được nhiều kiến thức thực tế!
+
+help me generate a list of feature suitable for the shoppe assignment 
+
+Dưới đây là danh sách feature đầy đủ – đúng tinh thần LAB211 cho đề tài
+👉 E-Commerce Simulation (mô hình Shopee/Lazada)
+Danh sách này đủ sâu để đạt 8–10 điểm, dễ chia việc cho nhóm 3–4 người, và rất phù hợp để demo + vấn đáp.
+
+1. CORE ENTITIES (bắt buộc phải có)
+
+(Dùng để kiểm tra tiêu chí Entity + Volume + Conflict Logic)
+
+User
+
+Customer
+
+Shop Owner
+
+Admin
+
+Shop
+
+Product
+
+ProductVariant (size, màu, giá, tồn kho riêng)
+
+Order
+
+OrderItem
+
+Voucher
+
+InventoryTransaction (ghi log nhập/xuất kho)
+
+2. DATA MIGRATION (ETL – BẮT BUỘC ĂN ĐIỂM)
+2.1 Import CSV → Database
+
+Import:
+
+Users (>10.000 dòng)
+
+Products + Variants
+
+Shops
+
+Xử lý dữ liệu rác:
+
+Email sai format
+
+Phone thiếu số
+
+Giá âm
+
+Variant trùng SKU
+
+Mapping dữ liệu:
+
+CSV Product → Product + ProductVariant
+
+Log lỗi import:
+
+Dòng lỗi → file import_error.log
+
+📌 Demo vấn đáp:
+
+“CSV cũ rất bẩn, nhóm em đã normalize và split thành nhiều bảng như thế nào?”
+
+3. USER & AUTHENTICATION
+3.1 Authentication
+
+Register / Login
+
+Session-based Authentication (HttpSession)
+
+Role-based access:
+
+Admin
+
+Shop Owner
+
+Customer
+
+3.2 User Management
+
+View / Update profile
+
+Xem lịch sử đơn hàng
+
+Tích điểm Loyalty Point
+
+4. SHOP MANAGEMENT (SHOP OWNER)
+4.1 Shop CRUD
+
+Tạo / sửa / ẩn Shop
+
+Upload logo shop
+
+4.2 Product Management
+
+CRUD Product
+
+CRUD Product Variant:
+
+Size
+
+Color
+
+Price
+
+Stock
+
+Enable / Disable product
+
+4.3 Inventory Tracking
+
+Tự động trừ kho khi đặt hàng
+
+Ghi log:
+
+IN (nhập)
+
+OUT (bán)
+
+📌 Conflict Logic:
+
+Nhiều user mua cùng lúc → không được âm kho
+
+5. CUSTOMER FEATURES (GIỐNG SHOPEE)
+5.1 Browse & Search
+
+Trang chủ:
+
+Flash Sale
+
+Sản phẩm mới
+
+Search:
+
+Theo tên
+
+Theo shop
+
+Theo giá
+
+Filter:
+
+Price range
+
+Size / Color
+
+5.2 Product Detail
+
+Chọn Variant
+
+Xem tồn kho realtime
+
+Giá sau khuyến mãi
+
+6. CART & ORDER (TRỌNG TÂM LOGIC)
+6.1 Cart (Session Management)
+
+Add / Update / Remove item
+
+Cart lưu bằng Session
+
+Kiểm tra stock trước khi checkout
+
+6.2 Voucher System (Logic khó – ăn điểm)
+
+Voucher theo:
+
+Shop
+
+Toàn sàn
+
+Điều kiện:
+
+Min order amount
+
+Expired date
+
+Không cho dùng trùng
+
+Voucher chỉ dùng 1 lần / user
+
+6.3 Order Processing
+
+Checkout:
+
+Transaction DB
+
+Lock inventory
+
+Order status:
+
+PENDING
+
+PAID
+
+CANCELLED
+
+Rollback nếu lỗi
+
+📌 Demo vấn đáp:
+
+“Nếu 2 người cùng mua 1 sản phẩm còn 1 cái thì chuyện gì xảy ra?”
+
+7. FLASH SALE SIMULATION (PHẦN ĂN ĐIỂM CAO)
+7.1 Flash Sale Feature
+
+Set thời gian Flash Sale
+
+Giảm giá theo Variant
+
+Giới hạn số lượng bán
+
+7.2 Simulator (Project B – BẮT BUỘC)
+
+Java Console App
+
+Sinh:
+
+User giả
+
+Order giả
+
+Bắn:
+
+1.000 – 10.000 request POST /api/order
+
+Config:
+
+Thread count
+
+Delay
+
+Log:
+
+Success
+
+Out of stock
+
+Error
+
+📌 Demo bắt buộc:
+
+Tomcat log chạy liên tục
+
+Stock không bị âm
+
+8. ADMIN DASHBOARD (VISUALIZATION)
+8.1 Statistics
+
+Tổng đơn hàng theo ngày
+
+Doanh thu theo shop
+
+Top sản phẩm bán chạy
+
+Failed orders (do hết kho)
+
+8.2 Chart
+
+Line chart: Orders / day
+
+Bar chart: Revenue / shop
+
+Pie chart: Order status
+
+9. NON-FUNCTIONAL (GIẢNG VIÊN RẤT THÍCH)
+9.1 Performance & Safety
+
+JDBC Transaction
+
+synchronized / DB locking
+
+Connection Pool (bonus)
+
+9.2 Logging
+
+Access log
+
+Order log
+
+Error log
+
+10. FEATURE → ĐIỂM RUBRIC MAP
+Feature	Rubric
+CSV Import + Cleaning	Data Migration (2.0đ)
+MVC + Tomcat	Core Architecture (2.0đ)
+Cart + Voucher + Stock Lock	Complex Logic (3.0đ)
+Simulator Flash Sale	Simulator (3.0đ)
+Dashboard Charts	UI & Reporting (1.5đ)
+AI Logs + Git	Process (1.5đ)
+11. GỢI Ý CHIA VIỆC (NHÓM 4 NGƯỜI)
+
+Member 1: Database + CSV Import
+
+Member 2: Product / Shop / Inventory
+
+Member 3: Cart / Order / Voucher Logic
+
+Member 4: Simulator + Dashboard
+
+Nếu bạn muốn, mình có thể:
+
+📌 Vẽ ERD chuẩn cho Shopee Simulation
+
+📌 Viết API list (Servlet endpoints)
+
+📌 Viết Simulator Java mẫu
+
+📌 Chuẩn bị script CSV 10.000 user/product
+
+Chỉ cần nói tiếp 👉 “next: …”
+
